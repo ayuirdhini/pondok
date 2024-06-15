@@ -2,17 +2,17 @@
 include("../src/template/head-admin.php");
 include("../koneksi.php");
 
-$id_kecamatan = "";
+$kecamatan = "";
 $nama_kelurahan = "";
 $eror = "";
 $sukses = "";
 
 if (isset($_POST['submit'])) {
-    $id_kecamatan = $_POST['kecamatan'];
+    $kecamatan = $_POST['kecamatan'];
     $nama_kelurahan = $_POST['nama_kelurahan'];
 
-    if ($id_kecamatan && $nama_kelurahan) {
-        $sql1 = "INSERT INTO kelurahan (id_kecamatan, nama_kelurahan) VALUES ('$id_kecamatan', '$nama_kelurahan')";
+    if ($kecamatan && $nama_kelurahan) {
+        $sql1 = "INSERT INTO kelurahan (id_kecamatan, nama_kelurahan) VALUES ('$kecamatan', '$nama_kelurahan')";
         $q1 = mysqli_query($koneksi, $sql1);
 
         if ($q1) {
