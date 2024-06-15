@@ -18,20 +18,23 @@ if (isset($_GET['op'])) {
 
 if ($op == 'edit') {
     $id_kecamatan = $_GET['id_kecamatan'];
-    $sql1 = "SELECT k*, ko.id_prov FROM kecamatan k JOIN kota ko ON k.id_kota = ko.id_kota WHERE id_kecamatan = '$id_kecamatan'";
+    $sql1 = "SELECT k.*, ko.id_prov FROM kecamatan k 
+             JOIN kota ko ON k.id_kota = ko.id_kota 
+             WHERE id_kecamatan = '$id_kecamatan'";
     $q1 = mysqli_query($koneksi, $sql1);
     if ($q1) {
         $r1 = mysqli_fetch_array($q1);
         $id_kecamatan = $r1['id_kecamatan'];
         $id_kota = $r1['id_kota'];
-        $id_prov = $r1['id_prov']; // Diperbarui
+        $id_prov = $r1['id_prov']; // Update to use correct column name
         $nama_kecamatan = $r1['nama_kecamatan'];
     } else {
-        $eror = "data tidak ditemukan";
+        $eror = "Data tidak ditemukan";
     }
 }
 
 if (isset($_POST['submit'])) {
+    $id_kecamatan = $_POST['id_kecamatan'];
     $id_kota = $_POST['kota'];
     $nama_kecamatan = $_POST['nama_kecamatan'];
 
@@ -39,7 +42,7 @@ if (isset($_POST['submit'])) {
         $sql1 = "UPDATE kecamatan SET id_kota='$id_kota', nama_kecamatan='$nama_kecamatan' WHERE id_kecamatan='$id_kecamatan'";
         $q1 = mysqli_query($koneksi, $sql1);
         if ($q1) {
-            $sukses = "Berhasil Mengubah Data Baru";
+            $sukses = "Berhasil Mengubah Data";
             echo '<script>window.location="kecamatan.php"</script>';
         } else {
             $eror = "Gagal Mengubah data";
@@ -49,6 +52,7 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+
 <main class="app-main">
     <div class="app-content-header">
         <div class="container-fluid">
@@ -139,6 +143,7 @@ if (isset($_POST['submit'])) {
 <?php
 include("../src/template/footer.php");
 ?>
+
 <script>
     function fetchKota(provinsiId) {
         if (provinsiId !== "") {
