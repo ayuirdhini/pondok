@@ -1,21 +1,68 @@
 <?php
-session_start();
-include("../koneksi.php");
+session_start(); // Mulai session
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Simpan data dari form ke dalam session
-    $_SESSION['santri'] = $_POST;
+// Proses pengisian data santri
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Ambil semua data dari form
+    $id_agama = $_POST['id_agama'];
+    $id_pendidikan = $_POST['id_pendidikan'];
+    $id_tempat_lahir = $_POST['id_tempat_lahir'];
+    $id_kew = $_POST['id_kew'];
+    $nama_csantri = $_POST['nama_csantri'];
+    $tempat_lahir = $_POST['tempat_lahir'];
+    $tanggal_lahir = $_POST['tanggal_lahir'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $no_telp = $_POST['no_telp'];
+    $hobi = $_POST['hobi'];
+    $cita_cita = $_POST['cita_cita'];
+    $jumlah_saudara = $_POST['jumlah_saudara'];
+    $riwayat_penyakit = $_POST['riwayat_penyakit'];
+    $kepemilikan_pip = $_POST['kepemilikan_pip'];
+    $nomor_pip = $_POST['nomor_pip'];
+    $alamat = $_POST['alamat'];
+    $provinsi = $_POST['provinsi'];
+    $kota = $_POST['kota'];
+    $kecamatan = $_POST['kecamatan'];
+    $kelurahan = $_POST['kelurahan'];
+    $no_telp_rumah = $_POST['no_telp_rumah'];
+    $id_kategori_pendaftaran = $_POST['id_kategori_pendaftaran'];
+    $tanggal_daftar = date('Y-m-d'); // Tanggal daftar saat ini
 
-    // Redirect ke halaman form orang tua
+    // Simpan data santri ke dalam session
+    $_SESSION['santri'] = [
+        'id_agama' => $id_agama,
+        'id_pendidikan' => $id_pendidikan,
+        'id_tempat_lahir' => $id_tempat_lahir,
+        'id_kew' => $id_kew,
+        'nama_csantri' => $nama_csantri,
+        'tempat_lahir' => $tempat_lahir,
+        'tanggal_lahir' => $tanggal_lahir,
+        'jenis_kelamin' => $jenis_kelamin,
+        'no_telp' => $no_telp,
+        'hobi' => $hobi,
+        'cita_cita' => $cita_cita,
+        'jumlah_saudara' => $jumlah_saudara,
+        'riwayat_penyakit' => $riwayat_penyakit,
+        'kepemilikan_pip' => $kepemilikan_pip,
+        'nomor_pip' => $nomor_pip,
+        'alamat' => $alamat,
+        'provinsi' => $provinsi,
+        'kota' => $kota,
+        'kecamatan' => $kecamatan,
+        'kelurahan' => $kelurahan,
+        'no_telp_rumah' => $no_telp_rumah,
+        'id_kategori_pendaftaran' => $id_kategori_pendaftaran,
+        'tanggal_daftar' => $tanggal_daftar
+    ];
+
+    // Redirect ke halaman form data orang tua
     header("Location: form-tambah-data-santri-ortu.php");
     exit();
 }
-
-// Ambil data dari session jika ada
-$santri = $_SESSION['santri'] ?? array();
-
 include("../src/template/head-petugas.php");
+include("../koneksi.php");
 ?>
+
 <main class="app-main">
     <!--begin::App Content Header-->
     <div class="app-content-header">
@@ -249,7 +296,7 @@ include("../src/template/head-petugas.php");
 
                                                         <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="kategori_pendaftaran">Jenis Pendaftaran:</label>
+                                            <label for="id_kategori_pendaftaran">Jenis Pendaftaran:</label>
                                             <div class="row">
                                                 <?php
                                                 $sql = "SELECT * FROM kategori_pendaftaran ORDER BY id_kategori ASC";
@@ -257,7 +304,7 @@ include("../src/template/head-petugas.php");
                                                 while ($r = mysqli_fetch_array($q)) {
                                                     echo '<div class="col-md-6">
                                                             <div class="form-check">
-                                                              <input class="form-check-input" type="radio" name="kategori_pendaftaran" id="kategori_pendaftaran' . $r['id_kategori'] . '" value="' . $r['id_kategori'] . '">
+                                                              <input class="form-check-input" type="radio" name="id_kategori_pendaftaran" id="kategori_pendaftaran' . $r['id_kategori'] . '" value="' . $r['id_kategori'] . '">
                                                                 <label class="form-check-label" for="status' . $r['id_kategori'] . '">' . $r['nama_kategori'] . '</label>
                                                             </div>
                                                         </div>';

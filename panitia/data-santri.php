@@ -1,30 +1,6 @@
 <?php
 include("../src/template/head-panitia.php");
 include("../koneksi.php");
-
-$id_agama = "";
-$nama_agama = "";
-$eror   = "";
-$sukses = "";
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-} else {
-    $op = "";
-}
-
-if ($op == 'delete') {
-    $id_agama = $_GET['id_agama'];
-    // Sesuaikan dengan perubahan perilaku kunci asing
-    $sql1 = "DELETE FROM agama WHERE id_agama = '$id_agama'";
-    $q1   = mysqli_query($koneksi, $sql1);
-
-      if ($q1) {
-        $sukses = "Berhasil Hapus data";
-    } else {
-        $eror = "Gagal melakukan delete data";
-    }
-}
 ?>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -68,7 +44,6 @@ if ($op == 'delete') {
           <div class="card-header">
             <h3 class="card-title">Tabel Data Diri Calon Santri</h3>
             <div class="card-tools">
-              <a href="form-tambah-data-santri.php"><button class="btn btn-success"><i class="fas fa-plus"></i> Tambah Data</button></a>
             </div>
           </div>
           <!-- /.card-header -->
@@ -82,8 +57,7 @@ if ($op == 'delete') {
                      <th>Jenis Kelamin</th>
                      <th>Nama Orang Tua/Wali</th>
                      <th>Nomor Telepon</th>
-                     <th>Hasil Seleksi</th>
-                     <th>Action</th>
+                     
                 </tr>
               </thead>
               <tbody>
@@ -96,13 +70,20 @@ if ($op == 'delete') {
                         ?>
                             <tr>
                                 <td><?= $urut++ ?></td>
-                                <td><?= $row['nama_csantri'] ?></td>
+                                <td>
+                                <span class="nama"><?= $row['nama_csantri'] ?></span>
+                                <a href="lihat-data-santri.php?op=edit&id_csantri=<?php echo $row['id_csantri'] ?>" class="btn btn-info">Lihat</a>
+                                </td>
+                                <td><?= $row['tanggal_lahir'] ?></td>
+                                <td><?= $row['jenis_kelamin'] ?></td>
+                                <td>
+                                <span class="nama"><?= $row['nama_ayah'] ?></span>
+                                <a href="lihat-data-ortu.php?op=edit&id_csantri=<?php echo $row['id_csantri'] ?>" class="btn btn-info">Lihat</a>
+                                </td>
+                                <td><?= $row['no_telp'] ?></td>
+                                
                             </td>
-                            <td>
-                                <a href="../Admin/CRUD-Admin/form-edit-agama.php?op=edit&id_agama=<?php echo $row['id_agama'] ?>"><button class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
-                                <a href="agama.php?op=delete&id_agama=<?php echo $row['id_agama'] ?>" onclick="return confirm('Apakah anda yakin ingin menghapus data?')"> <button class="btn btn-danger"><i class="fas fa-trash"></i></button></a>
-
-                            </td>
+                           
                         </tr>
                     <?php endwhile; ?>
               </tbody>

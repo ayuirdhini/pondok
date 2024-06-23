@@ -1,30 +1,6 @@
 <?php
 include("../src/template/head-panitia.php");
 include("../koneksi.php");
-
-$id_agama = "";
-$nama_agama = "";
-$eror   = "";
-$sukses = "";
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-} else {
-    $op = "";
-}
-
-if ($op == 'delete') {
-    $id_agama = $_GET['id_agama'];
-    // Sesuaikan dengan perubahan perilaku kunci asing
-    $sql1 = "DELETE FROM agama WHERE id_agama = '$id_agama'";
-    $q1   = mysqli_query($koneksi, $sql1);
-
-      if ($q1) {
-        $sukses = "Berhasil Hapus data";
-    } else {
-        $eror = "Gagal melakukan delete data";
-    }
-}
 ?>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

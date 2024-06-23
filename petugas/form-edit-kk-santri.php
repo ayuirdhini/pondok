@@ -2,37 +2,54 @@
 include("../src/template/head-petugas.php");
 include("../koneksi.php");
 
-$nomor_kk = "";
+$id_KK = "";
+$nomor_KK = "";
 $id_csantri = "";
+$nama_kepkel = "";
 $id_statusKK = "";
 $error = "";
 $sukses = "";
 
+if (isset($_GET['op'])) {
+    $op = $_GET['op'];
+} else {
+    $op = "";
+}
+
+if ($op == 'edit') {
+    $id_KK = $_GET['id_KK'];
+    $sql1 = "SELECT * FROM kartu_keluarga WHERE id_KK = '$id_KK'";
+    $q1 = mysqli_query($koneksi, $sql1);
+    $r1 = mysqli_fetch_array($q1);
+    if ($r1) {
+        $id_KK = $r1['id_KK'];
+        $nomor_KK = $r1['nomor_KK']; 
+        $id_csantri = $r1['id_csantri'];
+        $nama_kepkel = $r1['nama_kepkel']; 
+        $id_statusKK = $r1['id_statusKK'];
+    } else {
+        $error = "Data tidak ditemukan";
+    }
+}
+
 if (isset($_POST['submit'])) {
-    $nomor_kk = $_POST['nomor_kk'];
+    $nomor_KK = $_POST['nomor_KK'];
     $id_csantri = $_POST['nama_csantri'];
-    $nama_kepkel = $_POST['nama_kepala_keluarga'];
+    $nama_kepkel = $_POST['nama_kepkel'];
     $id_statusKK = $_POST['status_kepala_keluarga'];
 
-    if ($nomor_kk && $id_csantri && $nama_kepkel && $id_statusKK) {
-        if (strlen($nomor_kk) <= 100 && strlen($nama_kepkel) <= 100) {
-            // Use prepared statements
-            $stmt = $koneksi->prepare("INSERT INTO kartu_keluarga (nomor_kk, id_csantri, nama_kepkel, id_statusKK) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("siss", $nomor_kk, $id_csantri, $nama_kepkel, $id_statusKK);
-            $q1 = $stmt->execute();
-
-            if ($q1) {
-                $sukses = "Berhasil memasukkan data baru";
-                echo '<script>window.location="data-kk-santri.php"</script>';
-            } else {
-                $error = "Gagal memasukkan data. Error: " . $stmt->error;
-            }
-            $stmt->close();
+    if ($nomor_KK && $id_csantri && $nama_kepkel && $id_statusKK) {
+        $sql1 = "UPDATE kartu_keluarga SET nomor_KK='$nomor_KK', id_csantri='$id_csantri' , nama_kepkel='$nama_kepkel' , id_statusKK='$id_statusKK' 
+        WHERE id_KK='$id_KK'";
+        $q1 = mysqli_query($koneksi, $sql1);
+        if ($q1) {
+            $sukses = "Berhasil Mengubah Data";
+            echo '<script>window.location="data-kk-santri.php"</script>';
         } else {
-            $error = "Nomor KK atau Nama Kepala Keluarga terlalu panjang. Maksimal 100 karakter.";
+            $error = "Gagal Mengubah Data";
         }
     } else {
-        $error = "Silahkan masukkan semua data";
+        $error = "Silahkan Masukkan Semua Data";
     }
 }
 ?>
@@ -63,25 +80,25 @@ if (isset($_POST['submit'])) {
                         <div class="card-body">
                             <form action="" method="POST">
                                 <div class="form-group">
-                                    <label for="nama_csantri">Nama Santri:</label>
+                                    <label for="nama_csantri">Nama Calon Santri:</label>
                                     <select class="form-control" id="nama_csantri" name="nama_csantri">
-                                        <option value="">-- Pilih Calon Santri --</option>
                                         <?php
                                         $sql = "SELECT * FROM calon_santri ORDER BY id_csantri ASC";
                                         $q = mysqli_query($koneksi, $sql);
                                         while ($r = mysqli_fetch_array($q)) {
-                                            echo '<option value="' . $r['id_csantri'] . '">' . $r['nama_csantri'] . '</option>';
+                                            $selected = $r['id_csantri'] == $id_csantri ? 'selected' : '';
+                                            echo '<option value="' . $r['id_csantri'] . '" ' . $selected . '>' . $r['nama_csantri'] . '</option>';
                                         }
                                         ?>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="nomor_kk">Nomor Kartu Keluarga:</label>
-                                    <input type="text" class="form-control" id="nomor_kk" name="nomor_kk" maxlength="100">
+                                    <label for="nomor_KK">Nomor Kartu Keluarga:</label>
+                                    <input type="text" class="form-control" id="nomor_KK" name="nomor_KK" value="<?php echo htmlspecialchars($nomor_KK); ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nama_kepala_keluarga">Nama Kepala Keluarga:</label>
-                                    <input type="text" class="form-control" id="nama_kepala_keluarga" name="nama_kepala_keluarga" maxlength="100">
+                                    <label for="nama_kepkel">Nama Kepala Keluarga:</label>
+                                    <input type="text" class="form-control" id="nama_kepkel" name="nama_kepkel" value="<?php echo htmlspecialchars($nama_kepkel); ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="status_kepala_keluarga">Status Kepala Keluarga:</label>
@@ -97,14 +114,14 @@ if (isset($_POST['submit'])) {
                                             $half = ceil(count($statuses) / 2);
                                             for ($i = 0; $i < $half; $i++) {
                                                 echo '<div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="status_kepala_keluarga" id="status' . $statuses[$i]['id_statusKK'] . '" value="' . $statuses[$i]['id_statusKK'] . '">
+                                                        <input class="form-check-input" type="radio" name="status_kepala_keluarga" id="status' . $statuses[$i]['id_statusKK'] . '" value="' . $statuses[$i]['id_statusKK'] . '" ' . ($statuses[$i]['id_statusKK'] == $id_statusKK ? 'checked' : '') . '>
                                                         <label class="form-check-label" for="status' . $statuses[$i]['id_statusKK'] . '">' . $statuses[$i]['nama_Statuskepkel'] . '</label>
                                                       </div>';
                                             }
                                             echo '</div><div class="col-md-12">';
                                             for ($i = $half; $i < count($statuses); $i++) {
                                                 echo '<div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="status_kepala_keluarga" id="status' . $statuses[$i]['id_statusKK'] . '" value="' . $statuses[$i]['id_statusKK'] . '">
+                                                        <input class="form-check-input" type="radio" name="status_kepala_keluarga" id="status' . $statuses[$i]['id_statusKK'] . '" value="' . $statuses[$i]['id_statusKK'] . '" ' . ($statuses[$i]['id_statusKK'] == $id_statusKK ? 'checked' : '') . '>
                                                         <label class="form-check-label" for="status' . $statuses[$i]['id_statusKK'] . '">' . $statuses[$i]['nama_Statuskepkel'] . '</label>
                                                       </div>';
                                             }

@@ -1,3 +1,3 @@
 <?PHP
-$koneksi = new mysqli("localhost", "root", "", "db_pondok3");
+$koneksi = new mysqli("localhost", "root", "", "dbdb");
 ?>

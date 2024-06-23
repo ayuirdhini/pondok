@@ -34,6 +34,12 @@ if ($op == 'delete') {
 <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<style>
+        .nama {
+            display: inline-block;
+            margin-right: 10px; /* Menambahkan jarak */
+        }
+    </style>
 
 <main class="app-main"> <!--begin::App Content Header-->
             <div class="app-content-header"> <!--begin::Container-->
@@ -95,7 +101,17 @@ if ($op == 'delete') {
                         ?>
                             <tr>
                                 <td><?= $urut++ ?></td>
-                                <td><?= $row['nama_csantri'] ?></td>
+                                <td>
+                                <span class="nama"><?= $row['nama_csantri'] ?></span>
+                                <a href="lihat-data-santri.php?op=edit&id_csantri=<?php echo $row['id_csantri'] ?>" class="btn btn-info">Lihat</a>
+                                </td>
+                                <td><?= $row['tanggal_lahir'] ?></td>
+                                <td><?= $row['jenis_kelamin'] ?></td>
+                                <td>
+                                <span class="nama"><?= $row['nama_ayah'] ?></span>
+                                <a href="lihat-data-ortu.php?op=edit&id_csantri=<?php echo $row['id_csantri'] ?>" class="btn btn-info">Lihat</a>
+                                </td>
+                                <td><?= $row['no_telp'] ?></td>
                             </td>
                             <td>
                                 <a href="../Admin/CRUD-Admin/form-edit-agama.php?op=edit&id_agama=<?php echo $row['id_agama'] ?>"><button class="btn btn-primary"><i class="fas fa-edit"></i></button></a>

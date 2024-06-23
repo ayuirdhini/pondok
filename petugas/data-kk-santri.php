@@ -2,8 +2,7 @@
 include("../src/template/head-petugas.php");
 include("../koneksi.php");
 
-$id_agama = "";
-$nama_agama = "";
+$id_KK = "";
 $eror   = "";
 $sukses = "";
 
@@ -14,9 +13,9 @@ if (isset($_GET['op'])) {
 }
 
 if ($op == 'delete') {
-    $id_agama = $_GET['id_agama'];
+    $id_KK = $_GET['id_KK'];
     // Sesuaikan dengan perubahan perilaku kunci asing
-    $sql1 = "DELETE FROM agama WHERE id_agama = '$id_agama'";
+    $sql1 = "DELETE FROM kartu_keluarga WHERE id_KK = '$id_KK'";
     $q1   = mysqli_query($koneksi, $sql1);
 
       if ($q1) {
@@ -103,8 +102,8 @@ if ($op == 'delete') {
                                 <td><?= $row['nama_Statuskepkel'] ?></td>
                             </td>
                             <td>
-                                <a href="../petugas/CRUD-petugas/form-edit-kk-santri.php?op=edit&id_KK=<?php echo $row['id_KK'] ?>"><button class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
-                                <a href="kk-santri.php?op=delete&id_KK=<?php echo $row['id_KK'] ?>" onclick="return confirm('Apakah anda yakin ingin menghapus data?')"> <button class="btn btn-danger"><i class="fas fa-trash"></i></button></a>
+                                <a href="form-edit-kk-santri.php?op=edit&id_KK=<?php echo $row['id_KK'] ?>"><button class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                                <a href="data-kk-santri.php?op=delete&id_KK=<?php echo $row['id_KK'] ?>" onclick="return confirm('Apakah anda yakin ingin menghapus data?')"> <button class="btn btn-danger"><i class="fas fa-trash"></i></button></a>
 
                             </td>
                         </tr>

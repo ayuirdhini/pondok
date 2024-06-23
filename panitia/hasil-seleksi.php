@@ -1,7 +1,29 @@
 <?php
-include("../src/template/head-kponpes.php");
+include("../src/template/head-panitia.php");
 include("../koneksi.php");
 
+$id_seleksi = "";
+$eror   = "";
+$sukses = "";
+
+if (isset($_GET['op'])) {
+    $op = $_GET['op'];
+} else {
+    $op = "";
+}
+
+if ($op == 'delete') {
+    $id_seleksi = $_GET['id_seleksi'];
+    // Sesuaikan dengan perubahan perilaku kunci asing
+    $sql1 = "DELETE FROM hasil_seleksi WHERE id_seleksi = '$id_seleksi'";
+    $q1   = mysqli_query($koneksi, $sql1);
+
+      if ($q1) {
+        $sukses = "Berhasil Hapus data";
+    } else {
+        $eror = "Gagal melakukan delete data";
+    }
+}
 ?>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -17,13 +39,13 @@ include("../koneksi.php");
                 <div class="container-fluid"> <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Kartu Keluarga Santri</h3>
+                            <h3 class="mb-0">Hasil Seleksi</h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
                                 <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Kartu Keluarga Santri
+                                Hasil Seleksi
                                 </li>
                             </ol>
                         </div>
@@ -43,8 +65,10 @@ include("../koneksi.php");
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Tabel Data Kartu Keluarga Calon Santri</h3>
-      
+            <h3 class="card-title">Tabel Hasil Seleksi</h3>
+            <div class="card-tools">
+              <a href="form-tambah-hasil-seleksi.php"><button class="btn btn-success"><i class="fas fa-plus"></i> Tambah Data</button></a>
+            </div>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -53,33 +77,31 @@ include("../koneksi.php");
                 <tr>
                      <th>No</th>
                      <th>Nama Calon Santri</th>
-                     <th>No Kartu Keluarga</th>
-                     <th>Nama Kepala Keluarga</th>
-                     <th>Status Kepala Keluarga</th>
+                     <th>Keterangan</th>
                      
+                     <th>Action</th>
                 </tr>
               </thead>
               <tbody>
               <?php
-                          $sql = "SELECT kartu_keluarga.id_KK, kartu_keluarga.nomor_KK, calon_santri.nama_csantri, kartu_keluarga.nama_kepkel, status_kepala_keluarga.nama_Statuskepkel 
-                          FROM kartu_keluarga
-                          JOIN calon_santri ON kartu_keluarga.id_csantri = calon_santri.id_csantri
-                          JOIN status_kepala_keluarga ON kartu_keluarga.id_statusKK = status_kepala_keluarga.id_statusKK";
-                        $result = $koneksi->query($sql);
-                        $urut = 1;
+                   $sql = "SELECT calon_santri.nama_csantri, hasil_seleksi.keterangan, hasil_seleksi.id_seleksi
+                           FROM hasil_seleksi
+                           JOIN calon_santri ON hasil_seleksi.id_csantri = calon_santri.id_csantri";
+                    $result = $koneksi->query($sql);
+                    $urut = 1;
 
-                        while ($row = $result->fetch_array()) :
-                        ?>
-                            <tr>
-                                <td><?= $urut++ ?></td>
-                                <td><?= $row['nama_csantri'] ?></td>
-                                <td><?= $row['nomor_KK'] ?></td>
-                                <td><?= $row['nama_kepkel'] ?></td>
-                                <td><?= $row['nama_Statuskepkel'] ?></td>
+                    while ($row = $result->fetch_array()) :
+                    ?>
+                        <tr>
+                            <td><?= $urut++ ?></td>
+                            <td><?= $row['nama_csantri'] ?></td>
+                            <td><?= $row['keterangan'] ?></td>
+                            <td>
+                            <a href="form-edit-hasil-seleksi.php?op=edit&id_seleksi=<?= $row['id_seleksi'] ?>"><button class="btn btn-primary"><i class="fas fa-edit"></i></button></a>
+                            <a href="hasil-seleksi.php?op=delete&id_seleksi=<?= $row['id_seleksi'] ?>" onclick="return confirm('Apakah anda yakin ingin menghapus data?')"><button class="btn btn-danger"><i class="fas fa-trash"></i></button></a>
                             </td>
-                           
                         </tr>
-                    <?php endwhile; ?>
+                <?php endwhile; ?>
               </tbody>
 
             </table>
@@ -140,9 +162,4 @@ include("../koneksi.php");
     });
   });
 </script>
-
-<?php
-include("../src/template/footer.php");
-?>
-
 
